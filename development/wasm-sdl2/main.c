@@ -8,6 +8,7 @@
 
 #include <SDL_mixer.h> // had to add this
 
+
 #include "emscripten.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -29,38 +30,46 @@ int playSound(int argc, char* argv[]) {
 
     printf("\nStarting.\n");
 
-    if (SDL_Init(SDL_INIT_AUDIO) != 0) {
-        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
-        return 1;
+    Mix_Music *music = NULL;
+    Mix_Chunk *wave = NULL;
+
+    SDL_Init(SDL_INIT_AUDIO);
+
+    int audio_rate = 44100;
+    Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
+    int audio_channels = 1;
+    int audio_buffers = 4096;
+
+    if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) < 0) {
+        printf("Unable to open audio!\n");
+        exit(1);
     }
 
-    printf("\nStarting 1.\n");
+    if(Mix_Init(MIX_INIT_MOD) != MIX_INIT_MOD)
+        printf("errer\n");
 
+    Mix_Volume(-1, MIX_MAX_VOLUME);
 
-    // Initialize audio subsystem
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
-        SDL_Log("Unable to initialize audio: %s", Mix_GetError());
-        return 1;
+    music = Mix_LoadMUS("encoded.wav");
+    wave = Mix_LoadWAV("encoded.wav");
+
+    if (music == NULL) {
+        printf("Could not load encoded.wav\n\n");
+        printf("%s\n", Mix_GetError());
     }
 
-    printf("\nStarting 2.\n");
-
-    // Load music file
-    Mix_Music* music = Mix_LoadMUS("encoded.wav");
-    if (!music) {
-        SDL_Log("Unable to load music: %s", Mix_GetError());
-        return 1;
+    if (wave == NULL) {
+        printf("Could not load encoded.wav\n\n");
+        printf("%s\n", Mix_GetError());
     }
 
-    printf("\nStarting 3.\n");
-
+    Mix_VolumeChunk(wave, MIX_MAX_VOLUME);
     Mix_VolumeMusic(MIX_MAX_VOLUME);
 
-    // Play the loaded music
-    if (Mix_PlayMusic(music, 1) == -1) {
-        SDL_Log("Unable to play music: %s", Mix_GetError());
-        return 1;
-    }
+    Mix_PlayMusic(music, 0);
+    printf("%s\n", Mix_GetError());
+    Mix_FadeInChannelTimed(-1, wave, 0, 100,1);
+    printf("%s\n", Mix_GetError());
 
     printf("\nStarting 4.\n");
 
@@ -77,6 +86,3 @@ int playSound(int argc, char* argv[]) {
     SDL_Quit();
     return 0;
 }
-
-
-
