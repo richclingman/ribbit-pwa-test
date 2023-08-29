@@ -4,14 +4,24 @@ and may not be redistributed without written permission.*/
 // from 21_sound_effects_and_music.cpp
 
 
+#ifdef __cplusplus
+#define EXTERN extern "C"
+#else
+#define EXTERN
+#endif
+
+
 //Using SDL, SDL_image, SDL_ttf, SDL_mixer, standard IO, math, and strings
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
-#include <string>
+
+#include <string.h>
 
 #include <unistd.h>
+
+#include "emscripten.h"
 
 
 //Screen dimension constants
@@ -116,15 +126,9 @@ void close() {
     SDL_Quit();
 }
 
-#ifdef __cplusplus
-#define EXTERN extern "C"
-#else
-#define EXTERN
-#endif
-
-//EMSCRIPTEN_KEEPALIVE
-//int play_music(int argc, char *args[]) {
-int main(int argc, char *args[]) {
+EXTERN EMSCRIPTEN_KEEPALIVE
+int play_sound(int argc, char *args[]) {
+//int main(int argc, char *args[]) {
     //Start up SDL and create window
     if (!init()) {
         printf("Failed to initialize!\n");
@@ -134,9 +138,13 @@ int main(int argc, char *args[]) {
             printf("Failed to load media!\n");
         } else {
 
+            printf("Play gHigh\n");
+
             Mix_PlayChannel(-1, gHigh, 0);
 
             usleep(500000);
+
+            printf("Play gMusic\n");
 
             Mix_PlayMusic(gMusic, -1);
 
@@ -210,7 +218,11 @@ int main(int argc, char *args[]) {
         }
     }
 
+    printf("Waiting\n");
+
     usleep(3000000);
+
+    printf("Close\n");
 
     //Free resources and close SDL
     close();

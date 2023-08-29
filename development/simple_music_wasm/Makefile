@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = simple_music_wasm.cpp
+OBJS = simple_music_wasm.c
 
 #CC specifies which compiler we're using
 CC = g++
