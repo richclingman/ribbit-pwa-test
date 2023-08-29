@@ -10,6 +10,7 @@
 
 #include "emscripten.h"
 #include <stdio.h>
+#include <unistd.h>
 
 /**
  * TODO: Separate audio code into function
@@ -37,7 +38,7 @@ int playSound(int argc, char* argv[]) {
 
 
     // Initialize audio subsystem
-    if (Mix_OpenAudio(48000, AUDIO_S16SYS, 2, 1024 * 1024) == -1) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
         SDL_Log("Unable to initialize audio: %s", Mix_GetError());
         return 1;
     }
@@ -45,7 +46,7 @@ int playSound(int argc, char* argv[]) {
     printf("\nStarting 2.\n");
 
     // Load music file
-    Mix_Chunk* music = Mix_LoadWAV("encoded.wav");
+    Mix_Music* music = Mix_LoadMUS("encoded.wav");
     if (!music) {
         SDL_Log("Unable to load music: %s", Mix_GetError());
         return 1;
@@ -53,13 +54,17 @@ int playSound(int argc, char* argv[]) {
 
     printf("\nStarting 3.\n");
 
+    Mix_VolumeMusic(MIX_MAX_VOLUME);
+
     // Play the loaded music
-    if (Mix_PlayChannel(0, music, 2) == -1) {
+    if (Mix_PlayMusic(music, 1) == -1) {
         SDL_Log("Unable to play music: %s", Mix_GetError());
         return 1;
     }
 
     printf("\nStarting 4.\n");
+
+    usleep(2000000);
 
     // Wait for user input or some time to hear the music
     SDL_Delay(2000); // Delay for 5 seconds
@@ -68,7 +73,7 @@ int playSound(int argc, char* argv[]) {
 
     // Free resources and quit
     Mix_CloseAudio();
-    Mix_FreeChunk(music);
+    Mix_FreeMusic(music);
     SDL_Quit();
     return 0;
 }
