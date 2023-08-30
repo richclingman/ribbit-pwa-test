@@ -13,8 +13,8 @@ and may not be redistributed without written permission.*/
 
 //Using SDL, SDL_image, SDL_ttf, SDL_mixer, standard IO, math, and strings
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_image.h>
 #include <stdio.h>
 
 #include <string.h>
@@ -65,14 +65,16 @@ bool loadMedia() {
     bool success = true;
 
     //Load music
-    gMusic = Mix_LoadMUS("encoded.wav");
+    gMusic = Mix_LoadMUS("/encoded.wav");
+//    gMusic = Mix_LoadMUS_RW(SDL_RWFromFile("encoded.wav", "rb"), 1);
     if (gMusic == NULL) {
         printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
     }
 
     //Load sound effects
-    gHigh = Mix_LoadWAV("high.wav");
+    gHigh = Mix_LoadWAV("/high.wav");
+//    gMusic = Mix_LoadMUS_RW(SDL_RWFromFile("high.wav", "rb"), 1);
     if (gHigh == NULL) {
         printf("Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         success = false;
@@ -107,17 +109,22 @@ int play_sound(int argc, char *args[]) {
             printf("Failed to load media!\n");
         } else {
 
-            Mix_Volume(-1, MIX_MAX_VOLUME); // doesn't help
-            Mix_VolumeChunk(gHigh, MIX_MAX_VOLUME); // doesn't help
-            Mix_VolumeMusic(MIX_MAX_VOLUME); // doesn't help
+//            Mix_Volume(-1, MIX_MAX_VOLUME); // doesn't help
+//            Mix_VolumeChunk(gHigh, MIX_MAX_VOLUME); // doesn't help
+//            Mix_VolumeMusic(MIX_MAX_VOLUME); // doesn't help
 //            Mix_MasterVolume(MIX_MAX_VOLUME); // does not exist (but in docs)
 
+
+
+            // "CHUNK" STILL DOES NOT PLAY
             printf("Play gHigh\n");
 
             Mix_PlayChannel(-1, gHigh, 0);
 
-            usleep(500000);
+            usleep(5000000);
 
+
+            // "MUSIC" *DOES* PLAY
             printf("Play gMusic\n");
 
             Mix_PlayMusic(gMusic, -1);
