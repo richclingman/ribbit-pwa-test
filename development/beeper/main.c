@@ -3,21 +3,20 @@
 #include <math.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_audio.h>
+#include <unistd.h>
 
 #include "emscripten.h"
 
 const int AMPLITUDE = 28000;
 const int SAMPLE_RATE = 44100;
 
-void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes)
-{
-    Sint16 *buffer = (Sint16*)raw_buffer;
+void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes) {
+    Sint16 *buffer = (Sint16 *) raw_buffer;
     int length = bytes / 2; // 2 bytes per sample for AUDIO_S16SYS
-    int sample_nr = (*(int*)user_data);
+    int sample_nr = (*(int *) user_data);
 
-    for(int i = 0; i < length; i++, sample_nr++)
-    {
-        double time = (double)sample_nr / (double)SAMPLE_RATE;
+    for (int i = 0; i < length; i++, sample_nr++) {
+        double time = (double) sample_nr / (double) SAMPLE_RATE;
         buffer[i] = (Sint16)(AMPLITUDE * sin(2.0f * M_PI * 441.0f * time)); // render 441 HZ sine wave
     }
 }
@@ -31,7 +30,9 @@ void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes)
 EXTERN EMSCRIPTEN_KEEPALIVE
 int play_sound(int argc, char *args[]) {
 //int main(int argc, char *argv[]) {
-    if(SDL_Init(SDL_INIT_AUDIO) != 0) SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
+    printf("Starting.\n");
+
+    if (SDL_Init(SDL_INIT_AUDIO) != 0) printf("Failed to initialize SDL\n");
 
     int sample_nr = 0;
 
@@ -44,14 +45,16 @@ int play_sound(int argc, char *args[]) {
     want.userdata = &sample_nr; // counter, keeping track of current sample number
 
     SDL_AudioSpec have;
-    if(SDL_OpenAudio(&want, &have) != 0) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to open audio: %s", SDL_GetError());
-    if(want.format != have.format) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to get the desired AudioSpec");
+    if (SDL_OpenAudio(&want, &have) != 0) printf("Failed to open audio: ");
+    if (want.format != have.format) printf("Failed to get the desired AudioSpec");
 
     SDL_PauseAudio(0); // start playing sound
-    SDL_Delay(1000); // wait while sound is playing
+    usleep(5000000); // wait while sound is playing
     SDL_PauseAudio(1); // stop playing sound
 
     SDL_CloseAudio();
+
+    printf("DONE\n");
 
     return 0;
 }
