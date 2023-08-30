@@ -12,6 +12,9 @@
 
 #include <emscripten.h>
 #include <SDL2/SDL.h>
+#include <SDL/SDL_mixer.h>
+#include <SDL/SDL_image.h>
+
 #include "audio.h"
 
 typedef struct {

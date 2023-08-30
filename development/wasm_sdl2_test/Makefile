@@ -13,7 +13,7 @@ OBJS = $(SRCS:%.c=%.o)
 
 CC = emcc
 WFLAGS := -W -Wall -O3
-CFLAGS := $(WFLAGS) -s WASM=1 -s USE_SDL=2
+CFLAGS := $(WFLAGS) -s USE_SDL=2
 # For background music
 CFLAGS += -s USE_OGG=1 -s USE_VORBIS=1
 # Uncomment line below if assets are large

@@ -9,7 +9,6 @@
 
 /* Initialization and cleanup routines. */
 
-#include <SDL2/SDL.h>
 #include "init.h"
 
 context ctx;

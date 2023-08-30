@@ -11,9 +11,6 @@
  * The other files have helper functions that are called from here.
  */
 
-#include "init.h"
-#include "audio.h"
-
 #define WIDTH 640
 #define HEIGHT 480
 
