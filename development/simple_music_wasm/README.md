@@ -62,4 +62,18 @@ command does not need...
  -s USE_SDL=1 -s USE_SDL_MIXER=1
 ```
 
+## Set Chrome to Allow Play
+
+Browsers are set to **not** allow audio to auto-play on page load.
+This is because of abusive ads and sites over the years.
+
+However, when developing, it can be nice to have audio play on page load.
+
+Here's how to set Chrome to allow auto-play of audio.
+
+* Go to 
+[chrome://settings/content/sound?search=play](chrome://settings/content/sound?search=play)
+
+* Under ```Sound | Allowed to play sound```
+* Add ```http://localhost```
 
