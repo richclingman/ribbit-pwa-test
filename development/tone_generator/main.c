@@ -2,6 +2,8 @@
 * From chat.openai.com example
 */
 
+#include "emscripten.h"
+
 #include <SDL2/SDL.h>
 
 #define SAMPLE_RATE 44100

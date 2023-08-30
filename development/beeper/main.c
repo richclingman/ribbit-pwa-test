@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_audio.h>
 
+#include "emscripten.h"
+
 const int AMPLITUDE = 28000;
 const int SAMPLE_RATE = 44100;
 
@@ -11,7 +13,7 @@ void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes)
 {
     Sint16 *buffer = (Sint16*)raw_buffer;
     int length = bytes / 2; // 2 bytes per sample for AUDIO_S16SYS
-    int &sample_nr(*(int*)user_data);
+    int sample_nr = (*(int*)user_data);
 
     for(int i = 0; i < length; i++, sample_nr++)
     {
@@ -20,8 +22,15 @@ void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes)
     }
 }
 
-int main(int argc, char *argv[])
-{
+#ifdef __cplusplus
+#define EXTERN extern "C"
+#else
+#define EXTERN
+#endif
+
+EXTERN EMSCRIPTEN_KEEPALIVE
+int play_sound(int argc, char *args[]) {
+//int main(int argc, char *argv[]) {
     if(SDL_Init(SDL_INIT_AUDIO) != 0) SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 
     int sample_nr = 0;
