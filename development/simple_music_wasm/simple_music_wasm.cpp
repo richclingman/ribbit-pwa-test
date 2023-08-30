@@ -21,7 +21,7 @@ and may not be redistributed without written permission.*/
 
 #include <unistd.h>
 
-//#include "emscripten.h"
+#include "emscripten.h"
 
 
 //Starts up SDL and creates window
@@ -95,9 +95,9 @@ void close() {
     SDL_Quit();
 }
 
-//EXTERN EMSCRIPTEN_KEEPALIVE
-//int play_sound(int argc, char *args[]) {
-int main(int argc, char *args[]) {
+EXTERN EMSCRIPTEN_KEEPALIVE
+int play_sound(int argc, char *args[]) {
+//int main(int argc, char *args[]) {
     //Start up SDL and create window
     if (!init()) {
         printf("Failed to initialize!\n");
@@ -106,6 +106,11 @@ int main(int argc, char *args[]) {
         if (!loadMedia()) {
             printf("Failed to load media!\n");
         } else {
+
+            Mix_Volume(-1, MIX_MAX_VOLUME); // doesn't help
+            Mix_VolumeChunk(gHigh, MIX_MAX_VOLUME); // doesn't help
+            Mix_VolumeMusic(MIX_MAX_VOLUME); // doesn't help
+//            Mix_MasterVolume(MIX_MAX_VOLUME); // does not exist (but in docs)
 
             printf("Play gHigh\n");
 

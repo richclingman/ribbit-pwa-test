@@ -9425,8 +9425,8 @@ var wasmImports = {
 var asm = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors');
 var _play_sound = Module['_play_sound'] = createExportWrapper('play_sound');
-var _free = createExportWrapper('free');
 var _malloc = createExportWrapper('malloc');
+var _free = createExportWrapper('free');
 var ___errno_location = createExportWrapper('__errno_location');
 var _fflush = Module['_fflush'] = createExportWrapper('fflush');
 var _emscripten_stack_init = () => (_emscripten_stack_init = wasmExports['emscripten_stack_init'])();
